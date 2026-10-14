@@ -1,0 +1,38 @@
+void __cdecl sym_emit_deferred(void)
+
+{
+  c1_symbol *sym;
+  c1xx_function_record *rec;
+  int *list;
+  char cVar1;
+  byte bVar2;
+  
+  while( true ) {
+    if (g_deferred_symbols == (void *)0x0) {
+      return;
+    }
+    sym = *(c1_symbol **)g_deferred_symbols;
+    if (sym == (c1_symbol *)0x0) break;
+    g_deferred_symbols = *(void **)((int)g_deferred_symbols + 4);
+    cVar1 = sym_not_written_to_il(sym);
+    if (cVar1 == '\0') {
+      bVar2 = sym->kind & 0x1f;
+      if ((((bVar2 == 7) || (bVar2 == 8)) || (bVar2 == 6)) &&
+         (rec = (sym->tail).fn.record, rec != (c1xx_function_record *)0x0)) {
+        func_emit_definition_record(rec);
+        sym_list_emit_deferred((int *)((sym->tail).fn.record)->unk14);
+      }
+      else {
+        il_emit_global_symbol((int *)&sym->name);
+        if (((sym->kind & 0x1f) == 10) && (list = (sym->tail).data.dependents, list != (int *)0x0))
+        {
+          sym_emit_deferred_list(list);
+          return;
+        }
+      }
+    }
+  }
+  g_deferred_symbols = *(void **)((int)g_deferred_symbols + 4);
+  return;
+}
+

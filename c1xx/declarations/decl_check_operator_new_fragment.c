@@ -1,0 +1,24 @@
+void __cdecl decl_check_operator_new_fragment(c1_symbol *sym,int nparams,uint ndefaults)
+
+{
+  uint uVar1;
+  
+  diag_error(0x335);
+  sym->flags3 = sym->flags3 | 4;
+  uVar1 = (uint)(sym->tail).fn.op_token;
+  if (uVar1 != 0x76) {
+    if (uVar1 == 0x8c) {
+      if ((int)(nparams - ndefaults) < 1) {
+        diag_error(0x33e);
+        sym->flags3 = sym->flags3 | 4;
+      }
+    }
+    else if (ndefaults != 0) {
+      diag_error(0x33f,uVar1);
+      sym->flags3 = sym->flags3 | 4;
+      return;
+    }
+  }
+  return;
+}
+

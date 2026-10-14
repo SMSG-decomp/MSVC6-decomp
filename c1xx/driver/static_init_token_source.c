@@ -1,0 +1,8 @@
+void __cdecl static_init_token_source(void)
+
+{
+  g_token_source = (c1_token_source_frame *)0x0;
+  g_token_position = g_lex_position;
+  return;
+}
+
